@@ -17,6 +17,7 @@ const SERVICE_OPTIONS = [
   "UI / UX Design",
   "API Integration",
   "Tech Consulting",
+  "Graphic Design",
   "Other"
 ];
 
