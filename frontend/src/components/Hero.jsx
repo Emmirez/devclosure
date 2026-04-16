@@ -130,7 +130,7 @@ export default function Hero() {
                 3+
               </span>
               <span className="text-[10px] font-medium opacity-80">
-                Yrs Experience
+                Years Exp.
               </span>
             </div>
             <div className="absolute -bottom-2 left-4 bg-[#13131E] dark:bg-[#1A1A2A] border border-gold-border rounded-xl px-4 py-2.5 shadow-card">

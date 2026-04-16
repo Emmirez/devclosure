@@ -7,7 +7,7 @@ const timeline = [
 const stats = [
   { num: "30+", label: "Live Projects" },
   { num: "50+", label: "Clients Helped" },
-  { num: "2+", label: "Years Exp." },
+  { num: "3+", label: "Years Exp." },
   { num: "100%", label: "Commitment" },
 ];
 
