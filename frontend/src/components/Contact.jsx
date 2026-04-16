@@ -6,7 +6,7 @@ const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 const contactDetails = [
-  { icon: "✉", label: "Email", value: "owhekoraobaro@gmail.com" },
+  { icon: "✉", label: "Email", value: "obaro@devclosure.dev" },
   { icon: "📍", label: "Location", value: "Lagos, Nigeria (Remote OK)" },
   { icon: "⏱", label: "Response Time", value: "Within 24 hours" },
   { icon: "🟢", label: "Availability", value: "Open to new projects" },
