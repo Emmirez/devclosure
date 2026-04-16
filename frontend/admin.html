@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Manage Testimonials</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .login-box,
+      .admin-panel {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        font-size: 28px;
+        margin-bottom: 24px;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #555;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.3s;
+      }
+
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: transform 0.2s;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+      }
+
+      .testimonial-card {
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        transition: all 0.3s;
+      }
+
+      .testimonial-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .testimonial-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .testimonial-name {
+        font-weight: 700;
+        font-size: 16px;
+        color: #333;
+      }
+
+      .testimonial-role {
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+      }
+
+      .testimonial-text {
+        color: #555;
+        margin: 12px 0;
+        line-height: 1.6;
+      }
+
+      .stars {
+        color: #ffc107;
+        font-size: 16px;
+        letter-spacing: 2px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .edit-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .delete-btn {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .save-btn {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      .cancel-btn {
+        background: #95a5a6;
+      }
+
+      .message {
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        animation: slideIn 0.3s;
+      }
+
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      /* Toast Notification Styles */
+      .toast-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        animation: slideInRight 0.3s ease-out;
+      }
+
+      .toast {
+        background: white;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 300px;
+        animation: fadeOut 0.3s ease-out 2.7s forwards;
+      }
+
+      .toast-success {
+        border-left: 4px solid #4caf50;
+      }
+
+      .toast-error {
+        border-left: 4px solid #f44336;
+      }
+
+      .toast-warning {
+        border-left: 4px solid #ff9800;
+      }
+
+      .toast-icon {
+        font-size: 24px;
+      }
+
+      .toast-content {
+        flex: 1;
+      }
+
+      .toast-title {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .toast-message {
+        font-size: 13px;
+        color: #666;
+      }
+
+      .toast-close {
+        cursor: pointer;
+        font-size: 18px;
+        color: #999;
+        transition: color 0.2s;
+      }
+
+      .toast-close:hover {
+        color: #333;
+      }
+
+      /* Modal Styles */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        animation: fadeIn 0.2s ease-out;
+      }
+
+      .modal {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        max-width: 400px;
+        width: 90%;
+        animation: scaleIn 0.2s ease-out;
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .modal-icon {
+        font-size: 32px;
+      }
+
+      .modal-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .modal-body {
+        margin-bottom: 24px;
+        color: #666;
+        line-height: 1.5;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+      }
+
+      .modal-btn {
+        padding: 8px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      .modal-btn-cancel {
+        background: #e0e0e0;
+        color: #666;
+      }
+
+      .modal-btn-confirm {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+      }
+
+      .modal-btn-confirm:hover {
+        transform: translateY(-1px);
+      }
+
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes scaleIn {
+        from {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .grid {
+        display: grid;
+        gap: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .login-box,
+        .admin-panel {
+          padding: 20px;
+        }
+
+        .testimonial-header {
+          flex-direction: column;
+        }
+
+        .toast {
+          min-width: 250px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Login Form -->
+      <div id="loginContainer" class="login-box">
+        <h1>🔐 Admin Login</h1>
+        <div class="form-group">
+          <label>Admin Key</label>
+          <input
+            type="password"
+            id="adminKey"
+            placeholder="Enter your admin key"
+            onkeypress="if (event.key === 'Enter') login();"
+          />
+        </div>
+        <button onclick="login()">Login →</button>
+        <div id="loginError" class="message error" style="display: none"></div>
+      </div>
+
+      <!-- Admin Panel -->
+      <div id="adminPanel" style="display: none">
+        <div class="admin-panel">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 30px;
+              flex-wrap: wrap;
+              gap: 15px;
+            "
+          >
+            <h1>📝 Manage Testimonials</h1>
+            <button onclick="logout()" style="background: #95a5a6">
+              Logout
+            </button>
+          </div>
+
+          <div id="stats" class="stats"></div>
+
+          <div id="message"></div>
+
+          <!-- Edit Form -->
+          <div
+            id="editForm"
+            style="
+              display: none;
+              background: #f0f0f0;
+              padding: 25px;
+              border-radius: 12px;
+              margin-bottom: 30px;
+            "
+          >
+            <h3 style="margin-bottom: 20px">✏️ Edit Testimonial</h3>
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="editName" />
+            </div>
+            <div class="form-group">
+              <label>Role</label>
+              <input type="text" id="editRole" />
+            </div>
+            <div class="form-group">
+              <label>Stars (1-5)</label>
+              <input type="number" id="editStars" min="1" max="5" />
+            </div>
+            <div class="form-group">
+              <label>Testimonial</label>
+              <textarea id="editText" rows="4"></textarea>
+            </div>
+            <div class="actions">
+              <button class="save-btn" onclick="saveEdit()">
+                💾 Save Changes
+              </button>
+              <button class="cancel-btn" onclick="cancelEdit()">
+                ❌ Cancel
+              </button>
+            </div>
+          </div>
+
+          <!-- Testimonials List -->
+          <div id="testimonialsList" class="grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-notification"></div>
+
+    <script>
+      const API_URL = "http://localhost:3000/api";
+      let currentAdminKey = null;
+      let editingId = null;
+
+      // Toast notification function
+      function showToast(title, message, type = "success") {
+        const container = document.getElementById("toastContainer");
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+
+        const icons = {
+          success: "✅",
+          error: "❌",
+          warning: "⚠️",
+        };
+
+        toast.innerHTML = `
+          <div class="toast-icon">${icons[type] || icons.success}</div>
+          <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+          </div>
+          <div class="toast-close" onclick="this.parentElement.remove()">✕</div>
+        `;
+
+        container.appendChild(toast);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+          if (toast && toast.parentElement) {
+            toast.remove();
+          }
+        }, 3000);
+      }
+
+      // Modal confirmation dialog
+      function showConfirm(title, message, onConfirm) {
+        const overlay = document.createElement("div");
+        overlay.className = "modal-overlay";
+        overlay.innerHTML = `
+          <div class="modal">
+            <div class="modal-header">
+              <div class="modal-icon">⚠️</div>
+              <div class="modal-title">${title}</div>
+            </div>
+            <div class="modal-body">${message}</div>
+            <div class="modal-actions">
+              <button class="modal-btn modal-btn-cancel" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+              <button class="modal-btn modal-btn-confirm" id="confirmBtn">Delete</button>
+            </div>
+          </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        document.getElementById("confirmBtn").onclick = () => {
+          overlay.remove();
+          onConfirm();
+        };
+
+        // Close on overlay click
+        overlay.onclick = (e) => {
+          if (e.target === overlay) {
+            overlay.remove();
+          }
+        };
+      }
+
+      async function login() {
+        const key = document.getElementById("adminKey").value;
+        if (!key) {
+          showToast("Error", "Please enter admin key", "error");
+          return;
+        }
+
+        try {
+          const response = await fetch(`${API_URL}/admin/stats`, {
+            headers: {
+              "X-Admin-Key": key,
+            },
+          });
+
+          if (response.ok) {
+            currentAdminKey = key;
+            await loadTestimonials();
+            showToast("Success", "Logged in successfully!", "success");
+          } else {
+            showToast(
+              "Access Denied",
+              "Invalid admin key. Please try again.",
+              "error",
+            );
+            document.getElementById("adminKey").value = "";
+          }
+        } catch (error) {
+          showToast(
+            "Connection Error",
+            "Cannot connect to server. Make sure backend is running.",
+            "error",
+          );
+        }
+      }
+
+      function logout() {
+        currentAdminKey = null;
+        document.getElementById("loginContainer").style.display = "block";
+        document.getElementById("adminPanel").style.display = "none";
+        document.getElementById("adminKey").value = "";
+        showToast(
+          "Logged Out",
+          "You have been logged out successfully.",
+          "success",
+        );
+      }
+
+      async function loadTestimonials() {
+        try {
+          const response = await fetch(`${API_URL}/testimonials`);
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            displayTestimonials(data.testimonials);
+            await loadStats();
+            document.getElementById("loginContainer").style.display = "none";
+            document.getElementById("adminPanel").style.display = "block";
+          } else {
+            showToast("Error", "Failed to load testimonials", "error");
+          }
+        } catch (error) {
+          showToast(
+            "Connection Error",
+            "Cannot connect to server. Make sure the backend is running.",
+            "error",
+          );
+        }
+      }
+
+      async function loadStats() {
+        try {
+          const response = await fetch(`${API_URL}/admin/stats`, {
+            headers: {
+              "X-Admin-Key": currentAdminKey,
+            },
+          });
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            const statsHtml = `
+              <div class="stat-card">
+                <div class="stat-number">${data.stats.total}</div>
+                <div class="stat-label">Total Testimonials</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">${data.stats.averageStars.toFixed(1)}</div>
+                <div class="stat-label">Average Rating</div>
+              </div>
+            `;
+            document.getElementById("stats").innerHTML = statsHtml;
+          }
+        } catch (error) {
+          console.error("Failed to load stats:", error);
+        }
+      }
+
+      function displayTestimonials(testimonials) {
+        const container = document.getElementById("testimonialsList");
+        if (testimonials.length === 0) {
+          container.innerHTML =
+            '<div style="text-align: center; padding: 40px;">No testimonials yet.</div>';
+          return;
+        }
+
+        container.innerHTML = testimonials
+          .map(
+            (t) => `
+              <div class="testimonial-card" data-id="${t.id}">
+                <div class="testimonial-header">
+                  <div>
+                    <div class="testimonial-name">${escapeHtml(t.name)}</div>
+                    <div class="testimonial-role">${escapeHtml(t.role)}</div>
+                  </div>
+                  <div class="stars">${"★".repeat(t.stars)}${"☆".repeat(5 - t.stars)}</div>
+                </div>
+                <div class="testimonial-text">"${escapeHtml(t.text)}"</div>
+                <div class="actions">
+                  <button class="edit-btn" onclick="openEdit('${t.id}')">✏️ Edit</button>
+                  <button class="delete-btn" onclick="deleteTestimonial('${t.id}')">🗑️ Delete</button>
+                </div>
+              </div>
+            `,
+          )
+          .join("");
+      }
+
+      async function openEdit(id) {
+        editingId = id;
+
+        try {
+          const response = await fetch(`${API_URL}/testimonials/${id}`);
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            document.getElementById("editName").value = data.testimonial.name;
+            document.getElementById("editRole").value = data.testimonial.role;
+            document.getElementById("editStars").value = data.testimonial.stars;
+            document.getElementById("editText").value = data.testimonial.text;
+            document.getElementById("editForm").style.display = "block";
+            document
+              .getElementById("editForm")
+              .scrollIntoView({ behavior: "smooth" });
+            showToast(
+              "Edit Mode",
+              `Editing testimonial from ${data.testimonial.name}`,
+              "warning",
+            );
+          }
+        } catch (error) {
+          showToast("Error", "Failed to load testimonial data", "error");
+        }
+      }
+
+      async function saveEdit() {
+        const updatedData = {
+          name: document.getElementById("editName").value,
+          role: document.getElementById("editRole").value,
+          stars: parseInt(document.getElementById("editStars").value),
+          text: document.getElementById("editText").value,
+        };
+
+        try {
+          const response = await fetch(`${API_URL}/testimonials/${editingId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Admin-Key": currentAdminKey,
+            },
+            body: JSON.stringify(updatedData),
+          });
+
+          if (response.ok) {
+            showToast(
+              "Success",
+              "Testimonial updated successfully!",
+              "success",
+            );
+            // Clear edit form without showing cancel message
+            editingId = null;
+            document.getElementById("editForm").style.display = "none";
+            document.getElementById("editName").value = "";
+            document.getElementById("editRole").value = "";
+            document.getElementById("editStars").value = "";
+            document.getElementById("editText").value = "";
+            await loadTestimonials();
+          } else {
+            const error = await response.json();
+            if (response.status === 401) {
+              showToast("Session Expired", "Please login again.", "error");
+              logout();
+            } else {
+              showToast("Error", error.error || "Failed to update", "error");
+            }
+          }
+        } catch (error) {
+          showToast("Error", "Failed to update testimonial", "error");
+        }
+      }
+
+      async function deleteTestimonial(id) {
+        // Get testimonial name for better UX
+        let testimonialName = "";
+        try {
+          const response = await fetch(`${API_URL}/testimonials/${id}`);
+          const data = await response.json();
+          if (data.success) {
+            testimonialName = data.testimonial.name;
+          }
+        } catch (e) {}
+
+        showConfirm(
+          "Delete Testimonial",
+          `Are you sure you want to delete the testimonial from ${testimonialName || "this user"}? This action cannot be undone.`,
+          async () => {
+            try {
+              const response = await fetch(`${API_URL}/testimonials/${id}`, {
+                method: "DELETE",
+                headers: {
+                  "X-Admin-Key": currentAdminKey,
+                },
+              });
+
+              if (response.ok) {
+                showToast(
+                  "Deleted",
+                  "Testimonial deleted successfully!",
+                  "success",
+                );
+                await loadTestimonials();
+              } else {
+                const error = await response.json();
+                if (response.status === 401) {
+                  showToast("Session Expired", "Please login again.", "error");
+                  logout();
+                } else {
+                  showToast(
+                    "Error",
+                    error.error || "Failed to delete",
+                    "error",
+                  );
+                }
+              }
+            } catch (error) {
+              showToast("Error", "Failed to delete testimonial", "error");
+            }
+          },
+        );
+      }
+
+      function cancelEdit() {
+        if (editingId) {
+          showToast(
+            "Cancelled",
+            "Edit cancelled. No changes were saved.",
+            "warning",
+          );
+        }
+        editingId = null;
+        document.getElementById("editForm").style.display = "none";
+        document.getElementById("editName").value = "";
+        document.getElementById("editRole").value = "";
+        document.getElementById("editStars").value = "";
+        document.getElementById("editText").value = "";
+      }
+
+      function showLoginError(msg) {
+        showToast("Error", msg, "error");
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+    </script>
+  </body>
+</html>
